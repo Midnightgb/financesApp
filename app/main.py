@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from core.logger import Logger
-from api.v1.routes import test_connection
+from api.v1.routes import test_connection, users
 
 
 Logger.info("Starting API")
@@ -14,3 +14,4 @@ def root():
 
 
 app.include_router(test_connection.router, tags=["Test Connection"])
+app.include_router(users.router, tags=["Users"])
