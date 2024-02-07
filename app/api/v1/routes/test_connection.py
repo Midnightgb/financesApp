@@ -13,7 +13,7 @@ router = APIRouter(
 
 
 @router.get("/test_connection")
-def test_connection(db: Session = Depends(get_database)):
+async def test_connection(db: Session = Depends(get_database)):
     if server_status(db):
         return handle_server_up()
     return handle_server_down()
