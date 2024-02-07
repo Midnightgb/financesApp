@@ -10,7 +10,7 @@ class UserRole(str, Enum):
 
 class UserBase(BaseModel):
     full_name: str
-    email: EmailStr
+    mail: EmailStr
 
 
 class UserCreate(UserBase):
