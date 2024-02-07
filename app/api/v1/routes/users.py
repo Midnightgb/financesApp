@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from core.database import get_database, server_status
 from core.logger import Logger
 #API dependencies
-from api.utils.handlers import handle_server_down
+from core.handlers import handle_server_down
 from api.v1.schemas.users import UserRead
 
 
