@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 # Core dependencies
 from core.database import get_database, server_status
@@ -6,7 +6,6 @@ from core.logger import Logger
 from core.utils import handle_server_down
 # API dependencies
 from api.v1.schemas.users import UserRead, UserCreate
-from api.v1.models.User import User
 from api.v1.crud.users import create_new_user, get_user_by_email, get_user_by_id
 
 
