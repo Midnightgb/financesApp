@@ -1,15 +1,15 @@
 from fastapi import FastAPI
 from core.logger import Logger
-from core.config import settings
+from core.config import Settings
 from api.v1.routes import test_connection, users
 
 
 Logger.info("Starting API")
 
 app = FastAPI(
-    title=settings.PROJECT_NAME,
-    description=settings.PROJECT_DESCRIPTION,
-    version=settings.PROJECT_VERSION,
+    title=Settings.PROJECT_NAME,
+    description=Settings.PROJECT_DESCRIPTION,
+    version=Settings.PROJECT_VERSION,
 )
 
 
