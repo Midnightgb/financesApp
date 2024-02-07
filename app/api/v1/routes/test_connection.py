@@ -5,7 +5,11 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 from api.utils.handlers import handle_server_down, handle_server_up
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/api/v1",
+    tags=["Test Connection"],
+    responses={404: {"description": "Not found"}},
+)
 
 
 @router.get("/test_connection")
