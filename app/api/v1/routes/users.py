@@ -6,6 +6,7 @@ from core.logger import Logger
 #API dependencies
 from app.core.utils import handle_server_down
 from api.v1.schemas.users import UserRead
+from api.v1.models.User import User
 
 
 router = APIRouter(

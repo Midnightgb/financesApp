@@ -3,7 +3,7 @@ from core.logger import Logger
 from core.database import get_database, server_status
 from fastapi import Depends
 from sqlalchemy.orm import Session
-from app.core.utils import handle_server_down, handle_server_up
+from core.utils import handle_server_down, handle_server_up
 
 router = APIRouter(
     prefix="/api/v1",
