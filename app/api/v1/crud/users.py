@@ -42,3 +42,15 @@ def get_user_by_email(email: str, db:Session):
   except Exception as e:
     Logger.error(f"Error getting user by email: {str(e)}", file=sys.stderr)
     raise HTTPException(status_code=500, detail=f"Error al obtener el usuario por email: {str(e)}")
+
+def get_user_by_id(user_id: str, db:Session):
+  try:
+    if not server_status(db):
+      return handle_server_down()
+    user = db.query(User).filter(User.user_id == user_id).first()
+    if user:
+      return user
+    return {"status":False, "message": "No se encontró el usuario con el id proporcionado."}
+  except Exception as e:
+    Logger.error(f"Error getting user by id: {str(e)}", file=sys.stderr)
+    raise HTTPException(status_code=500, detail=f"Error al obtener el usuario por id: {str(e)}")
