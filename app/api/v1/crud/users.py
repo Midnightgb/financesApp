@@ -8,7 +8,7 @@ from api.v1.schemas.users import UserRead, UserCreate
 from core.database import server_status
 from core.logger import Logger
 from core.utils import handle_server_down, generate_user_id
-from core.security import get_hashed_password
+from core.security import get_hashed_password, verify_password
 
 
 def create_new_user(user: UserCreate, db: Session):
@@ -40,7 +40,7 @@ def get_user_by_email(email: str, db: Session):
             return handle_server_down()
         user = db.query(User).filter(User.mail == email).first()
         if user:
-            return user
+            return {"status": True, "user": user}
         return {"status": False, "message": "No se encontró el usuario con el email proporcionado."}
     except Exception as e:
         Logger.error(f"Error getting user by email: {str(e)}", file=sys.stderr)
@@ -60,3 +60,18 @@ def get_user_by_id(user_id: str, db: Session):
         Logger.error(f"Error getting user by id: {str(e)}", file=sys.stderr)
         raise HTTPException(
             status_code=500, detail=f"Error al obtener el usuario por id: {str(e)}")
+
+def authenticate_user(email: str, password: str, db: Session):
+    try:
+        if not server_status(db):
+            return handle_server_down()
+        user = db.query(User).filter(User.mail == email).first()
+        if user:
+            if user.passhash == verify_password(password):
+                return user
+            return {"status": False, "message": "Contraseña incorrecta."}
+        return {"status": False, "message": "No se encontró el usuario con el email proporcionado."}
+    except Exception as e:
+        Logger.error(f"Error authenticating user: {str(e)}", file=sys.stderr)
+        raise HTTPException(
+            status_code=500, detail=f"Error al autenticar el usuario: {str(e)}")

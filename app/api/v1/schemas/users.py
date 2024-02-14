@@ -26,8 +26,17 @@ class UserCreate(UserBase):
 
 
 class UserRead(UserBase):
-    user_id: int
+    user_id: str
     user_role: UserRole
     user_status: bool
     created_at: datetime
     updated_at: datetime
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+    class Config:
+        orm_mode = True
+    # Cuando orm_mode esta habilitado, Pydantic permitirá pasar objetos SQLAlchemy directamente a los modelos Pydantic sin necesidad de definir explícitamente los campos.
