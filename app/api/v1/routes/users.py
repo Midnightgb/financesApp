@@ -58,12 +58,12 @@ async def create_user(user: UserCreate,
     if current_user.user_role != "admin":
         raise HTTPException(
             status_code=403, detail="No tiene permisos para crear un nuevo usuario.")
-    user_info = get_user_by_email(user.mail,'user', db)
+    user_info = get_user_by_email(user.mail, db)
     Logger.debug(f"Verifying user: {user.mail}")
     Logger.debug(f"User found: {user_info}")
     if user_info.get("status") is False:
         Logger.debug(f"Creating new user: {user.mail}")
-        return create_new_user(user, db)
+        return create_new_user(user,'admin', db)
     else:
         raise HTTPException(
             status_code=404, detail="El email proporcionado ya está en uso.")
