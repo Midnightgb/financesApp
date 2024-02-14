@@ -16,7 +16,7 @@ router = APIRouter(
     tags=["Users"],
     responses={404: {"description": "Not found"}},
 )
-
+# OAuth2 scheme for token authentication and user verification
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/users/login")
 
 
@@ -53,20 +53,24 @@ async def create_user(user: UserCreate, db: Session = Depends(get_database)):
 async def read_user(user_id: str, current_user: UserRead = Depends(get_current_user), db: Session = Depends(get_database)):
     if not server_status(db):
         return handle_server_down()
-    if current_user.user_role != "admin":
+    # Check if the user is an admin
+    if current_user.user_role == "admin" or current_user.user_id == user_id:
+        user = get_user_by_id(user_id, db)
+        if user is None:
+            raise HTTPException(
+                status_code=404, detail="Usuario no encontrado.")
+        return user
+    else:
         raise HTTPException(
-            status_code=401, detail="No tienes permisos para realizar esta acción.")
-    user_data = get_user_by_id(user_id, db)
-    if user_data is None:
-        raise HTTPException(
-            status_code=404, detail="Usuario no encontrado.")
-    return user_data
+            status_code=403, detail="No tiene permisos para ver este usuario.")
 
 
 @router.post("/login", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_database)):
     if not server_status(db):
         return handle_server_down()
+    # Authenticate the user and return the access token 
+    # form_data is a dict with the username and password
     user = authenticate_user(form_data.username, form_data.password, db)
     if "status" in user and not user["status"]:
         Logger.error(user.get("message"))
