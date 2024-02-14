@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 # Core dependencies
 from core.database import get_database, server_status
 from core.logger import Logger
 from core.utils import handle_server_down
-from core.security import create_access_token
+from core.security import create_access_token, verify_token
 # API dependencies
 from api.v1.schemas.users import UserRead, UserCreate, Token
 from api.v1.crud.users import create_new_user, get_user_by_email, get_user_by_id, authenticate_user
@@ -14,8 +14,24 @@ from api.v1.crud.users import create_new_user, get_user_by_email, get_user_by_id
 router = APIRouter(
     prefix="/api/v1",
     tags=["Users"],
-    responses={404: {"description": "Not d found"}},
+    responses={404: {"description": "Not found"}},
 )
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
+
+
+async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_database)):
+    if not server_status(db):
+        return handle_server_down()
+    user_id = await verify_token(token, db)
+    if user_id is None:
+        raise HTTPException(
+            status_code=401, detail="Invalid token")
+    user_data = get_user_by_id(user_id, db)
+    if user_data is None:
+        raise HTTPException(
+            status_code=404, detail="Usuario no encontrado.")
+    return user_data
 
 
 @router.post("/users/create/", response_model=UserRead)

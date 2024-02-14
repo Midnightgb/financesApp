@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Enum, Integer, String, Boolean, TIMESTAMP, DateTime
+from sqlalchemy import Column, Enum, String, Boolean, TIMESTAMP, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 
