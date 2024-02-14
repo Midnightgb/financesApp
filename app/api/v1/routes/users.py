@@ -12,18 +12,18 @@ from api.v1.crud.users import create_new_user, get_user_by_email, get_user_by_id
 
 
 router = APIRouter(
-    prefix="/api/v1",
+    prefix="/api/v1/users",
     tags=["Users"],
     responses={404: {"description": "Not found"}},
 )
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/users/login")
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_database)):
     if not server_status(db):
         return handle_server_down()
-    user_id = await verify_token(token, db)
+    user_id = await verify_token(token)
     if user_id is None:
         raise HTTPException(
             status_code=401, detail="Invalid token")
@@ -34,7 +34,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
     return user_data
 
 
-@router.post("/users/create/", response_model=UserRead)
+@router.post("/create/", response_model=UserRead)
 async def create_user(user: UserCreate, db: Session = Depends(get_database)):
     if not server_status(db):
         return handle_server_down()
@@ -49,10 +49,13 @@ async def create_user(user: UserCreate, db: Session = Depends(get_database)):
             status_code=404, detail="El email proporcionado ya está en uso.")
 
 
-@router.get("/users/get/{user_id}", response_model=UserRead)
-async def read_user(user_id: str, db: Session = Depends(get_database)):
+@router.get("/get/{user_id}", response_model=UserRead)
+async def read_user(user_id: str, current_user: UserRead = Depends(get_current_user), db: Session = Depends(get_database)):
     if not server_status(db):
         return handle_server_down()
+    if current_user.user_role != "admin":
+        raise HTTPException(
+            status_code=401, detail="No tienes permisos para realizar esta acción.")
     user_data = get_user_by_id(user_id, db)
     if user_data is None:
         raise HTTPException(

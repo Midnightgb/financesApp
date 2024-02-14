@@ -53,9 +53,7 @@ def get_user_by_id(user_id: str, db: Session):
         if not server_status(db):
             return handle_server_down()
         user = db.query(User).filter(User.user_id == user_id).first()
-        if user:
-            return user
-        return {"status": False, "message": "No se encontró el usuario con el id proporcionado."}
+        return user
     except Exception as e:
         Logger.error(f"Error getting user by id: {str(e)}", file=sys.stderr)
         raise HTTPException(
