@@ -8,6 +8,11 @@ from core.config import get_settings
 
 Logger.info("Database connection in progress...")
 settings = get_settings()
+
+if settings.DATABASE_URL is None:
+    Logger.error("Database connection failed: No database URL provided")
+    raise ValueError("Database URL not provided")
+
 engine = create_engine(
     settings.DATABASE_URL,
     pool_pre_ping=True,

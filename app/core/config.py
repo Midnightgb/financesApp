@@ -23,9 +23,15 @@ class Settings():
 
     SECRET_KEY: str = os.getenv("SECRET_KEY")
     TOKEN_EXPIRE_MINUTES: 30
+    ALGORITHM: str = os.getenv("ALGORITHM")
 
 
 def get_settings() -> Settings:
     Logger.debug("Loading settings from the environment")
+
+    if "None" in Settings.DATABASE_URL:
+        Logger.error("Settings not loaded: Database connection failed")
+        raise ValueError("Database connection failed")
+
     Logger.success(f"Settings loaded: {Settings.DATABASE_URL}")
     return Settings()

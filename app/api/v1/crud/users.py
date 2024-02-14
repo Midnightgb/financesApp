@@ -11,7 +11,7 @@ from core.utils import handle_server_down, generate_user_id
 from core.security import get_hashed_password
 
 
-async def create_new_user(user: UserCreate, db: Session):
+def create_new_user(user: UserCreate, db: Session):
     db_user = User(
         user_id=generate_user_id(),
         full_name=user.full_name,
@@ -34,7 +34,7 @@ async def create_new_user(user: UserCreate, db: Session):
             status_code=500, detail=f"Error al crear el usuario: {str(e)}")
 
 
-async def get_user_by_email(email: str, db: Session):
+def get_user_by_email(email: str, db: Session):
     try:
         if not server_status(db):
             return handle_server_down()
@@ -48,7 +48,7 @@ async def get_user_by_email(email: str, db: Session):
             status_code=500, detail=f"Error al obtener el usuario por email: {str(e)}")
 
 
-async def get_user_by_id(user_id: str, db: Session):
+def get_user_by_id(user_id: str, db: Session):
     try:
         if not server_status(db):
             return handle_server_down()

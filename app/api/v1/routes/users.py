@@ -21,7 +21,9 @@ async def create_user(user: UserCreate, db: Session = Depends(get_database)):
     if not server_status(db):
         return handle_server_down()
     verify_user = get_user_by_email(user.mail, db)
-    if verify_user is None:
+    Logger.debug(f"Verifying user: {user.mail}")
+    Logger.debug(f"User found: {verify_user}")
+    if verify_user is None or verify_user.get("status") is False:
         return create_new_user(user, db)
     else:
         raise HTTPException(

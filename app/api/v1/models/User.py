@@ -4,6 +4,7 @@ from datetime import datetime
 
 Base = declarative_base()
 
+
 class User(Base):
     __tablename__ = "users"
 
@@ -14,6 +15,5 @@ class User(Base):
     user_role = Column(Enum('admin', 'user'))
     user_status = Column(Boolean, default=True)
     created_at = Column(TIMESTAMP, default=datetime.utcnow())
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow())
-
-
+    updated_at = Column(DateTime, default=datetime.utcnow,
+                        onupdate=datetime.utcnow())
