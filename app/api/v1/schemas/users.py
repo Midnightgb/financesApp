@@ -38,5 +38,5 @@ class Token(BaseModel):
     token_type: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
     # Cuando orm_mode esta habilitado, Pydantic permitirá pasar objetos SQLAlchemy directamente a los modelos Pydantic sin necesidad de definir explícitamente los campos.

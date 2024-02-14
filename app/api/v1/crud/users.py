@@ -61,17 +61,18 @@ def get_user_by_id(user_id: str, db: Session):
         raise HTTPException(
             status_code=500, detail=f"Error al obtener el usuario por id: {str(e)}")
 
+
 def authenticate_user(email: str, password: str, db: Session):
     try:
         if not server_status(db):
             return handle_server_down()
         user = db.query(User).filter(User.mail == email).first()
         if user:
-            if user.passhash == verify_password(password):
-                return user
+            if verify_password(password, user.passhash):
+                return {"status": True, "user": user}
             return {"status": False, "message": "Contraseña incorrecta."}
         return {"status": False, "message": "No se encontró el usuario con el email proporcionado."}
     except Exception as e:
-        Logger.error(f"Error authenticating user: {str(e)}", file=sys.stderr)
+        Logger.error(f"Error authenticating user: {str(e)}")
         raise HTTPException(
             status_code=500, detail=f"Error al autenticar el usuario: {str(e)}")
