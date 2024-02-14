@@ -19,12 +19,6 @@ class UserCreate(UserBase):
     user_status: bool = True
 
 
-class UserCreate(UserBase):
-    passhash: str
-    user_role: UserRole
-    user_status: bool = True
-
-
 class UserRead(UserBase):
     user_id: str
     user_role: UserRole

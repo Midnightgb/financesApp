@@ -11,13 +11,13 @@ from core.utils import handle_server_down, generate_user_id
 from core.security import get_hashed_password, verify_password
 
 
-def create_new_user(user: UserCreate, db: Session):
+def create_new_user(user: UserCreate, rol: str, db: Session):
     db_user = User(
         user_id=generate_user_id(),
         full_name=user.full_name,
         mail=user.mail,
         passhash=get_hashed_password(user.passhash),
-        user_role=user.user_role,
+        user_role=rol,
         user_status=user.user_status
     )
     try:
