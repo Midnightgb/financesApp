@@ -69,8 +69,7 @@ async def read_user(user_id: str, current_user: UserRead = Depends(get_current_u
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_database)):
     if not server_status(db):
         return handle_server_down()
-    # Authenticate the user and return the access token 
-    # form_data is a dict with the username and password
+    # Authenticate the user and return the access token
     user = authenticate_user(form_data.username, form_data.password, db)
     if "status" in user and not user["status"]:
         Logger.error(user.get("message"))
