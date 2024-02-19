@@ -38,7 +38,6 @@ def get_database():
 def server_status(db):
     try:
         db.execute(text('SELECT 1'))
-        Logger.info("Database server status: OK")
         return True
     except OperationalError:
         Logger.error("Database server status: ERROR")

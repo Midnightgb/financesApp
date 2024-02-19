@@ -76,7 +76,29 @@ def authenticate_user(email: str, password: str, db: Session):
             status_code=500, detail=f"Error al autenticar el usuario: {str(e)}")
 
 # Check if the user is an admin or the user itself
+
+
 def check_user_permissions(current_user: UserRead, user_id: str):
     if current_user.user_role == "admin" or current_user.user_id == user_id:
         return True
     return False
+
+
+def update_user(user_id: str, user: UserRead, db: Session):
+    try:
+        if not server_status(db):
+            return handle_server_down()
+
+        db_user = db.query(User).filter(User.user_id == user_id).first()
+        db_user.full_name = user.full_name
+        db_user.mail = user.mail
+        db_user.user_role = user.user_role
+        db_user.user_status = user.user_status
+        db.commit()
+        db.refresh(db_user)
+        return db_user
+    except Exception as e:
+        db.rollback()
+        Logger.error(f"Error updating user: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error al actualizar el usuario: {str(e)}")

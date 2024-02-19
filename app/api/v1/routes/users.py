@@ -8,7 +8,7 @@ from core.utils import handle_server_down
 from core.security import create_access_token, verify_token
 # API dependencies
 from api.v1.schemas.users import UserRead, UserCreate, Token
-from api.v1.crud.users import create_new_user, get_user_by_email, get_user_by_id, authenticate_user, check_user_permissions
+from api.v1.crud.users import create_new_user, get_user_by_email, get_user_by_id, authenticate_user, check_user_permissions, update_user
 
 
 router = APIRouter(
@@ -56,14 +56,11 @@ async def create_user(user: UserCreate,
                       ):
     if not server_status(db):
         return handle_server_down()
-    if current_user.user_role != "admin":
+    if not check_user_permissions(current_user, None):
         raise HTTPException(
             status_code=403, detail="No tiene permisos para crear un nuevo usuario.")
     user_info = get_user_by_email(user.mail, db)
-    Logger.debug(f"Verifying user: {user.mail}")
-    Logger.debug(f"User found: {user_info}")
     if user_info.get("status") is False:
-        Logger.debug(f"Creating new user: {user.mail}")
         return create_new_user(user, 'admin', db)
     else:
         raise HTTPException(
@@ -102,6 +99,15 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"access_token": access_token_expires, "token_type": "bearer"}
 
 # Update user
-#@router.post("/update", response_model=UserRead)
+# Actualizacion user users a si mismo, admin. Cualquier usuario puede actualizar su propia informacion y el admin puede actualizar la informacion de cualquier usuario.
 
 
+@router.post("/update", response_model=UserRead)
+async def update_user_info(user: UserRead, current_user: UserRead = Depends(get_current_user), db: Session = Depends(get_database)):
+    if not server_status(db):
+        return handle_server_down()
+    if check_user_permissions(current_user, user.user_id):
+        return update_user(user.user_id, user, db)
+    else:
+        raise HTTPException(
+            status_code=403, detail="No tiene permisos para actualizar este usuario.")
