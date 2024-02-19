@@ -2,7 +2,7 @@ import sys
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from api.v1.models.User import User
+from api.v1.models.user import User
 from api.v1.schemas.users import UserRead, UserCreate
 
 from core.database import server_status
