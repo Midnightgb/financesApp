@@ -104,7 +104,11 @@ async def update_user_info(user: UserRead, current_user: UserRead = Depends(get_
     if not server_status(db):
         return handle_server_down()
     if check_user_permissions(current_user, user.user_id):
-        return update_user(user.user_id, user, db)
+        Logger.debug(f"Updating user: {user.user_id}")
+        Logger.debug(f"User data to update: {user.dict()}")
+        Logger.debug(f"Current user role: {current_user.user_role}")
+
+        return update_user(user.user_id, user, current_user.user_role, db)
     else:
         raise HTTPException(
             status_code=403, detail="No tiene permisos para actualizar este usuario.")

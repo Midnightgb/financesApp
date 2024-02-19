@@ -82,7 +82,7 @@ def check_user_permissions(current_user: UserRead, user_id: str):
     return False
 
 
-def update_user(user_id: str, user: UserRead, db: Session):
+def update_user(user_id: str, user: UserRead, current_user_role: str, db: Session):
     try:
         if not server_status(db):
             return handle_server_down()
@@ -92,7 +92,7 @@ def update_user(user_id: str, user: UserRead, db: Session):
         db_user.mail = user.mail
         db_user.user_status = user.user_status
 
-        if user.user_role == "admin":
+        if current_user_role == "admin":
             db_user.user_role = user.user_role
             
         db.commit()
