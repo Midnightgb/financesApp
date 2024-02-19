@@ -90,8 +90,11 @@ def update_user(user_id: str, user: UserRead, db: Session):
         db_user = db.query(User).filter(User.user_id == user_id).first()
         db_user.full_name = user.full_name
         db_user.mail = user.mail
-        db_user.user_role = user.user_role
         db_user.user_status = user.user_status
+
+        if user.user_role == "admin":
+            db_user.user_role = user.user_role
+            
         db.commit()
         db.refresh(db_user)
         return db_user
