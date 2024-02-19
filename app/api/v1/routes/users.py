@@ -8,7 +8,7 @@ from core.utils import handle_server_down
 from core.security import create_access_token, verify_token
 # API dependencies
 from api.v1.schemas.users import UserRead, UserCreate, Token
-from api.v1.crud.users import create_new_user, get_user_by_email, get_user_by_id, authenticate_user
+from api.v1.crud.users import create_new_user, get_user_by_email, get_user_by_id, authenticate_user, check_user_permissions
 
 
 router = APIRouter(
@@ -38,7 +38,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 async def create_user(user: UserCreate, db: Session = Depends(get_database)):
     if not server_status(db):
         return handle_server_down()
-    user_info = get_user_by_email(user.mail,'user', db)
+    user_info = get_user_by_email(user.mail, 'user', db)
     Logger.debug(f"Verifying user: {user.mail}")
     Logger.debug(f"User found: {user_info}")
     if user_info.get("status") is False:
@@ -48,11 +48,12 @@ async def create_user(user: UserCreate, db: Session = Depends(get_database)):
         raise HTTPException(
             status_code=404, detail="El email proporcionado ya está en uso.")
 
+
 @router.post("/create/admin", response_model=UserRead)
-async def create_user(user: UserCreate, 
-                    db: Session = Depends(get_database),
-                    current_user: UserRead = Depends(get_current_user)
-                    ):
+async def create_user(user: UserCreate,
+                      db: Session = Depends(get_database),
+                      current_user: UserRead = Depends(get_current_user)
+                      ):
     if not server_status(db):
         return handle_server_down()
     if current_user.user_role != "admin":
@@ -63,7 +64,7 @@ async def create_user(user: UserCreate,
     Logger.debug(f"User found: {user_info}")
     if user_info.get("status") is False:
         Logger.debug(f"Creating new user: {user.mail}")
-        return create_new_user(user,'admin', db)
+        return create_new_user(user, 'admin', db)
     else:
         raise HTTPException(
             status_code=404, detail="El email proporcionado ya está en uso.")
@@ -73,8 +74,8 @@ async def create_user(user: UserCreate,
 async def read_user(user_id: str, current_user: UserRead = Depends(get_current_user), db: Session = Depends(get_database)):
     if not server_status(db):
         return handle_server_down()
-    # Check if the user is an admin
-    if current_user.user_role == "admin" or current_user.user_id == user_id:
+
+    if check_user_permissions(current_user, user_id):
         user = get_user_by_id(user_id, db)
         if user is None:
             raise HTTPException(
@@ -99,3 +100,8 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     access_token_expires = create_access_token(
         data={"sub": user.user_id})
     return {"access_token": access_token_expires, "token_type": "bearer"}
+
+# Update user
+#@router.post("/update", response_model=UserRead)
+
+

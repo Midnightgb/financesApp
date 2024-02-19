@@ -74,3 +74,9 @@ def authenticate_user(email: str, password: str, db: Session):
         Logger.error(f"Error authenticating user: {str(e)}")
         raise HTTPException(
             status_code=500, detail=f"Error al autenticar el usuario: {str(e)}")
+
+# Check if the user is an admin or the user itself
+def check_user_permissions(current_user: UserRead, user_id: str):
+    if current_user.user_role == "admin" or current_user.user_id == user_id:
+        return True
+    return False

@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from core.logger import Logger
 from core.config import Settings
 from api.v1.routes import test_connection, users
@@ -15,7 +16,7 @@ app = FastAPI(
 
 @app.get("/")
 async def root():
-    return {"message": "API IS RUNNING"}
+    return RedirectResponse(url="/docs")
 
 
 app.include_router(test_connection.router, tags=["Test Connection"])

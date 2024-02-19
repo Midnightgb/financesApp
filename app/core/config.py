@@ -26,7 +26,13 @@ class Settings():
     TOKEN_EXPIRE_MINUTES = 30
     ALGORITHM: str = os.getenv("ALGORITHM")
 
+    @classmethod
+    def are_settings_valid(cls):
+        return all(getattr(cls, attr) is not None for attr in dir(cls) if not callable(getattr(cls, attr)) and not attr.startswith("__"))
+
 
 def get_settings() -> Settings:
+    if not Settings.are_settings_valid():
+        raise Exception("Error loading settings")
     Logger.success(f"Settings loaded: {Settings.DATABASE_URL}")
     return Settings()
