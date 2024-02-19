@@ -98,9 +98,6 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         data={"sub": user.user_id})
     return {"access_token": access_token_expires, "token_type": "bearer"}
 
-# Update user
-# Actualizacion user users a si mismo, admin. Cualquier usuario puede actualizar su propia informacion y el admin puede actualizar la informacion de cualquier usuario.
-
 
 @router.post("/update", response_model=UserRead)
 async def update_user_info(user: UserRead, current_user: UserRead = Depends(get_current_user), db: Session = Depends(get_database)):
