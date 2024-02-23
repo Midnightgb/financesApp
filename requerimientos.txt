@@ -1,0 +1,4 @@
+- Endpoint para actualizar usuario
+- CRUD de categorias, con su schemas routers 
+- CRUD solo admin puede crear categorías 
+- Actualizacion user users a si mismo, admin. Cualquier usuario
