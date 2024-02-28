@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String, SmallInteger, Float, Date, Enum
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 
 Base = declarative_base()
@@ -16,3 +17,6 @@ class Transaction(Base):
     t_description = Column(String(120))
     t_type = Column(Enum('revenue', 'expenses'))
     t_date = Column(Date)
+
+    category = relationship("Category", backref="transactions")
+    user = relationship("User", backref="transactions")

@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String, Boolean, SmallInteger
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 
 Base = declarative_base()
@@ -12,3 +13,5 @@ class Category(Base):
     category_name = Column(String(50))
     category_description = Column(String(120))
     category_status = Column(Boolean, default=True)
+
+    transactions = relationship("Transaction", backref="category")

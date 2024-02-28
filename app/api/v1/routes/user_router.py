@@ -53,7 +53,7 @@ async def create_user(
             status_code=404, detail="El email proporcionado ya está en uso.")
 
 
-@router.post("/create/admin", response_model=UserRead)
+@router.post("/admin", response_model=UserRead)
 async def create_user(user: UserCreate,
                       db: Session = Depends(get_database),
                       current_user: UserRead = Depends(get_current_user)
@@ -71,7 +71,7 @@ async def create_user(user: UserCreate,
             status_code=404, detail="El email proporcionado ya está en uso.")
 
 
-@router.get("/get/{user_id}", response_model=UserRead)
+@router.get("/{user_id}/accounts0.", response_model=UserRead)
 async def read_user(
         user_id: str,
         current_user: UserRead = Depends(get_current_user),
@@ -108,7 +108,7 @@ async def login_for_access_token(
     return {"access_token": access_token_expires, "token_type": "bearer"}
 
 
-@router.post("/update", response_model=UserRead)
+@router.put("/update", response_model=UserRead)
 async def update_user_info(
         user: UserRead,
         current_user: UserRead = Depends(get_current_user),
