@@ -5,7 +5,7 @@ from datetime import datetime
 Base = declarative_base()
 
 
-class token(Base):
+class Token(Base):
     __tablename__ = "tokens"
 
     token = Column(String(180), primary_key=True)

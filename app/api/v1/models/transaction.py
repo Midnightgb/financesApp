@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
-class transaction(Base):
+class Transaction(Base):
     __tablename__ = "transactions"
 
     transactions_id = Column(SmallInteger(

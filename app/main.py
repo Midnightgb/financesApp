@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+from app.api.v1.routes import user_router
 from core.logger import Logger
 from core.config import Settings
-from api.v1.routes import test_connection, users
+from api.v1.routes import test_connection
 
 
 Logger.info("Starting API")
@@ -20,4 +21,4 @@ async def root():
 
 
 app.include_router(test_connection.router, tags=["Test Connection"])
-app.include_router(users.router, tags=["Users"])
+app.include_router(user_router.router, tags=["Users"])
