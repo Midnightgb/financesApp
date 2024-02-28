@@ -19,6 +19,7 @@ async def health_check(db: Session = Depends(get_database)):
         return handle_server_up()
     return handle_server_down()
 
+
 @router.get("/health_check_mongo")
 async def health_check_mongo():
     if server_status():
