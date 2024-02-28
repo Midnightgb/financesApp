@@ -4,6 +4,7 @@ from core.database import get_database, server_status
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from core.utils import handle_server_down, handle_server_up
+from core.mongodb import get_database, server_status
 
 router = APIRouter(
     prefix="/api/v1",
@@ -15,5 +16,11 @@ router = APIRouter(
 @router.get("/health_check")
 async def health_check(db: Session = Depends(get_database)):
     if server_status(db):
+        return handle_server_up()
+    return handle_server_down()
+
+@router.get("/health_check_mongo")
+async def health_check_mongo():
+    if server_status():
         return handle_server_up()
     return handle_server_down()
