@@ -12,5 +12,5 @@ class CategoryCreate(CategoryBase):
 
 
 class CategoryRead(CategoryBase):
-    category_id: str
+    category_id: int
     category_status: bool

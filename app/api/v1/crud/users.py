@@ -3,7 +3,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from api.v1.models.user import User
-from app.api.v1.schemas.user import UserRead, UserCreate
+from api.v1.schemas.user import UserRead, UserCreate
 
 from core.database import server_status
 from core.logger import Logger

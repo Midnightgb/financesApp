@@ -7,7 +7,7 @@ from core.logger import Logger
 from core.utils import handle_server_down
 from core.security import create_access_token, verify_token
 # API dependencies
-from app.api.v1.schemas.user import UserRead, UserCreate, Token
+from api.v1.schemas.user import UserRead, UserCreate, Token
 from api.v1.crud.users import create_new_user, get_user_by_email, get_user_by_id, authenticate_user, check_user_permissions, update_user
 
 
