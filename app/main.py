@@ -3,7 +3,7 @@ from fastapi.responses import RedirectResponse
 from app.api.v1.routes import user_router
 from core.logger import Logger
 from core.config import Settings
-from api.v1.routes import test_connection
+from app.api.v1.routes import health_check
 
 
 Logger.info("Starting API")
@@ -20,5 +20,5 @@ async def root():
     return RedirectResponse(url="/docs")
 
 
-app.include_router(test_connection.router, tags=["Test Connection"])
+app.include_router(health_check.router, tags=["Test Connection"])
 app.include_router(user_router.router, tags=["Users"])

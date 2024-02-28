@@ -12,8 +12,8 @@ router = APIRouter(
 )
 
 
-@router.get("/test_connection")
-async def test_connection(db: Session = Depends(get_database)):
+@router.get("/health_check")
+async def health_check(db: Session = Depends(get_database)):
     if server_status(db):
         return handle_server_up()
     return handle_server_down()

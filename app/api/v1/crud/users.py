@@ -11,7 +11,10 @@ from core.utils import handle_server_down, generate_user_id
 from core.security import get_hashed_password, verify_password
 
 
-def create_new_user(user: UserCreate, rol: str, db: Session):
+def create_new_user(
+        user: UserCreate,
+        rol: str,
+        db: Session):
     db_user = User(
         user_id=generate_user_id(),
         full_name=user.full_name,
@@ -34,7 +37,9 @@ def create_new_user(user: UserCreate, rol: str, db: Session):
             status_code=500, detail=f"Error al crear el usuario: {str(e)}")
 
 
-def get_user_by_email(email: str, db: Session):
+def get_user_by_email(
+        email: str,
+        db: Session):
     try:
         if not server_status(db):
             return handle_server_down()
@@ -48,7 +53,9 @@ def get_user_by_email(email: str, db: Session):
             status_code=500, detail=f"Error al obtener el usuario por email: {str(e)}")
 
 
-def get_user_by_id(user_id: str, db: Session):
+def get_user_by_id(
+        user_id: str,
+        db: Session):
     try:
         if not server_status(db):
             return handle_server_down()
@@ -60,7 +67,10 @@ def get_user_by_id(user_id: str, db: Session):
             status_code=500, detail=f"Error al obtener el usuario por id: {str(e)}")
 
 
-def authenticate_user(email: str, password: str, db: Session):
+def authenticate_user(
+        email: str,
+        password: str,
+        db: Session):
     try:
         if not server_status(db):
             return handle_server_down()
@@ -76,13 +86,19 @@ def authenticate_user(email: str, password: str, db: Session):
             status_code=500, detail=f"Error al autenticar el usuario: {str(e)}")
 
 
-def check_user_permissions(current_user: UserRead, user_id: str):
+def check_user_permissions(
+        current_user: UserRead,
+        user_id: str):
     if current_user.user_role == "admin" or current_user.user_id == user_id:
         return True
     return False
 
 
-def update_user(user_id: str, user: UserRead, current_user_role: str, db: Session):
+def update_user(
+        user_id: str,
+        user: UserRead,
+        current_user_role: str,
+        db: Session):
     try:
         if not server_status(db):
             return handle_server_down()
@@ -94,7 +110,7 @@ def update_user(user_id: str, user: UserRead, current_user_role: str, db: Sessio
 
         if current_user_role == "admin":
             db_user.user_role = user.user_role
-            
+
         db.commit()
         db.refresh(db_user)
         return db_user

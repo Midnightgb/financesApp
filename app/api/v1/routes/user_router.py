@@ -20,7 +20,9 @@ router = APIRouter(
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/users/login")
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_database)):
+async def get_current_user(
+        token: str = Depends(oauth2_scheme),
+        db: Session = Depends(get_database)):
     if not server_status(db):
         return handle_server_down()
     user_id = await verify_token(token)
@@ -35,7 +37,9 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 
 
 @router.post("/create/", response_model=UserRead)
-async def create_user(user: UserCreate, db: Session = Depends(get_database)):
+async def create_user(
+        user: UserCreate,
+        db: Session = Depends(get_database)):
     if not server_status(db):
         return handle_server_down()
     user_info = get_user_by_email(user.mail, 'user', db)
@@ -68,7 +72,10 @@ async def create_user(user: UserCreate,
 
 
 @router.get("/get/{user_id}", response_model=UserRead)
-async def read_user(user_id: str, current_user: UserRead = Depends(get_current_user), db: Session = Depends(get_database)):
+async def read_user(
+        user_id: str,
+        current_user: UserRead = Depends(get_current_user),
+        db: Session = Depends(get_database)):
     if not server_status(db):
         return handle_server_down()
 
@@ -84,7 +91,9 @@ async def read_user(user_id: str, current_user: UserRead = Depends(get_current_u
 
 
 @router.post("/login", response_model=Token)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_database)):
+async def login_for_access_token(
+        form_data: OAuth2PasswordRequestForm = Depends(),
+        db: Session = Depends(get_database)):
     if not server_status(db):
         return handle_server_down()
     # Authenticate the user and return the access token
@@ -100,7 +109,10 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 
 @router.post("/update", response_model=UserRead)
-async def update_user_info(user: UserRead, current_user: UserRead = Depends(get_current_user), db: Session = Depends(get_database)):
+async def update_user_info(
+        user: UserRead,
+        current_user: UserRead = Depends(get_current_user),
+        db: Session = Depends(get_database)):
     if not server_status(db):
         return handle_server_down()
     if check_user_permissions(current_user, user.user_id):
