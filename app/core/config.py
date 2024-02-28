@@ -23,11 +23,11 @@ class Settings():
     DATABASE_URL: str = f"mysql+pymysql://{DB_USER}:{
         DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
-    MGDB_USER: str = os.getenv("MGDB_USER")
+    MGDB_USER: str = os.getenv("MGDP_USER")
     MGDB_PASS: str = os.getenv("MGDB_PASS")
-    MGDB_NAME: str = os.getenv("MGDB_NAME")
-    MGDB_HOST: str = os.getenv("MGDB_HOST")
-    MGDB_PORT: str = os.getenv("MGDB_PORT")
+    MGDB_CLUSTER: str = os.getenv("MGDB_CLUSTER")
+    MGDB_APPNAME: str = os.getenv("MGDB_APPNAME")
+    MONGODB_URL: str = f"mongodb+srv://{MGDB_USER}:{MGDB_PASS}@{MGDB_CLUSTER}.mongodb.net/?retryWrites=true&w=majority&appName={MGDB_APPNAME}"
 
     SECRET_KEY: str = os.getenv("SECRET_KEY")
     TOKEN_EXPIRE_MINUTES = 30
@@ -42,7 +42,19 @@ class Settings():
 
 def get_settings() -> Settings:
     if not Settings.are_settings_valid():
-        raise Exception(f"Error loading settings: {
-                        Settings.are_settings_valid()}")
+        Logger.error(f"Error loading settings: {Settings.DATABASE_URL}")
+        Logger.error(f"Error loading settings: {Settings.DB_USER}")
+        Logger.error(f"Error loading settings: {Settings.DB_PASS}")
+        Logger.error(f"Error loading settings: {Settings.DB_NAME}")
+        Logger.error(f"Error loading settings: {Settings.DB_HOST}")
+        Logger.error(f"Error loading settings: {Settings.DB_PORT}")
+        Logger.error(f"Error loading settings: {Settings.MONGODB_URL}")
+        Logger.error(f"Error loading settings: {Settings.MGDB_USER}")
+        Logger.error(f"Error loading settings: {Settings.MGDB_PASS}")
+        Logger.error(f"Error loading settings: {Settings.MGDB_CLUSTER}")
+        Logger.error(f"Error loading settings: {Settings.MGDB_APPNAME}")
+        Logger.error(f"Error loading settings: {Settings.SECRET_KEY}")
+        Logger.error(f"Error loading settings: {Settings.TOKEN_EXPIRE_MINUTES}")
+        Logger.error(f"Error loading settings: {Settings.ALGORITHM}")
     Logger.success(f"Settings loaded: {Settings.DATABASE_URL}")
     return Settings()

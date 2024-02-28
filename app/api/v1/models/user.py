@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Enum, String, Boolean, TIMESTAMP, DateTime
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from datetime import datetime
+from api.v1.models.base_class import Base
+from api.v1.models.transaction import Transaction  
 
-Base = declarative_base()
 
 
 class User(Base):
@@ -18,5 +18,5 @@ class User(Base):
     created_at = Column(TIMESTAMP, default=datetime.utcnow())
     updated_at = Column(DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow())
-    transactions = relationship("Transaction", backref="user")
-    tokens = relationship("Token", backref="user")
+
+    transactions = relationship("Transaction", back_populates="user")

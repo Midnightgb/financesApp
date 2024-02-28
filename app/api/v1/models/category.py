@@ -1,10 +1,6 @@
 from sqlalchemy import Column, String, Boolean, SmallInteger
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-
-
-Base = declarative_base()
-
+from api.v1.models.base_class import Base
 
 class Category(Base):
     __tablename__ = "category"
@@ -14,4 +10,4 @@ class Category(Base):
     category_description = Column(String(120))
     category_status = Column(Boolean, default=True)
 
-    transactions = relationship("Transaction", backref="category")
+    transactions = relationship("Transaction", back_populates="category")

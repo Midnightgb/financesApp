@@ -71,7 +71,7 @@ async def create_user(user: UserCreate,
             status_code=404, detail="El email proporcionado ya está en uso.")
 
 
-@router.get("/{user_id}/accounts0.", response_model=UserRead)
+@router.get("/{user_id}/accounts", response_model=UserRead)
 async def read_user(
         user_id: str,
         current_user: UserRead = Depends(get_current_user),

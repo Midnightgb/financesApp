@@ -1,18 +1,13 @@
-from sqlalchemy import Column, String, Boolean, TIMESTAMP
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, String, Boolean, TIMESTAMP, ForeignKey
 from datetime import datetime
 from sqlalchemy.orm import relationship
-
-
-Base = declarative_base()
+from api.v1.models.base_class import Base
 
 
 class Token(Base):
     __tablename__ = "tokens"
 
     token = Column(String(180), primary_key=True)
-    user_id = Column(String(30))
+    user_id = Column(String(30), ForeignKey('users.user_id'))
     token_status = Column(Boolean, default=True)
     token_created_at = Column(TIMESTAMP, default=datetime.utcnow())
-
-    user = relationship("User", backref="tokens")
