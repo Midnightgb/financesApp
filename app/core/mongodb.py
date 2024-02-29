@@ -19,7 +19,7 @@ client = MongoClient(uri, server_api=ServerApi('1'))
 
 
 @contextmanager
-def get_database():
+def get_mongodb():
     try:
         client.admin.command('ping')
         print("Pinged your deployment. You successfully connected to MongoDB!")
@@ -27,7 +27,7 @@ def get_database():
         print(e)
 
 
-def server_status():
+def server_status_mongodb():
     try:
         client.admin.command('ping')  # Prueba de ping específica para MongoDB
         return True
