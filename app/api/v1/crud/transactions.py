@@ -54,6 +54,7 @@ def get_transaction_by_id(
 
 def get_all_transactions(
         db: Session,
+        user_id: str = None,
         offset: int = 0,
         limit: int = 10,
         category_id: int = None,
@@ -67,6 +68,8 @@ def get_all_transactions(
             conditions.append(Transaction.category_id == category_id)
         if t_type:
             conditions.append(Transaction.t_type == t_type)
+        if user_id:
+            conditions.append(Transaction.user_id == user_id)
         if conditions:
             query = query.filter(and_(*conditions))
         transactions = query.offset(offset).limit(limit).all()

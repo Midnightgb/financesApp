@@ -3,7 +3,7 @@ from enum import Enum
 from datetime import date
 
 
-class TransactionType(Enum):
+class TransactionType(str, Enum):
     revenue = "revenue"
     expenses = "expenses"
 
