@@ -15,7 +15,7 @@ router = APIRouter(
 )
 
 
-@router.post("/create/", response_model=CategoryRead)
+@router.post("/", response_model=CategoryRead)
 async def create_category(
         category: CategoryCreate,
         db: Session = Depends(get_database)):
@@ -40,7 +40,7 @@ async def get_categories(
     return get_all_categories(db, offset, limit)
 
 
-@router.put("/update/{category_id}", response_model=CategoryRead)
+@router.put("/{category_id}", response_model=CategoryRead)
 async def update_category_data(
         category_id: str,
         category: CategoryCreate,
@@ -50,7 +50,7 @@ async def update_category_data(
     return update_category(category_id, category, db)
 
 
-@router.delete("/delete/{category_id}", response_model=CategoryRead)
+@router.delete("/{category_id}", response_model=CategoryRead)
 async def delete_category_data(
         category_id: str,
         db: Session = Depends(get_database)):
