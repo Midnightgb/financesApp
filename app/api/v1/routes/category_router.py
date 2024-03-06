@@ -57,4 +57,3 @@ async def delete_category_data(
     if not server_status(db):
         return handle_server_down()
     return delete_category(category_id, db)
-

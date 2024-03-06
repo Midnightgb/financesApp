@@ -2,8 +2,7 @@ from sqlalchemy import Column, Enum, String, Boolean, TIMESTAMP, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from api.v1.models.base_class import Base
-from api.v1.models.transaction import Transaction  
-
+from api.v1.models.transaction import Transaction
 
 
 class User(Base):

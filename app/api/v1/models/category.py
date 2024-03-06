@@ -2,6 +2,7 @@ from sqlalchemy import Column, String, Boolean, SmallInteger
 from sqlalchemy.orm import relationship
 from api.v1.models.base_class import Base
 
+
 class Category(Base):
     __tablename__ = "category"
 

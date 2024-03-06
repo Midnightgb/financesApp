@@ -7,7 +7,8 @@ from api.v1.models.category import Category
 class Transaction(Base):
     __tablename__ = "transactions"
 
-    transactions_id = Column(SmallInteger, primary_key=True, autoincrement=True)
+    transactions_id = Column(
+        SmallInteger, primary_key=True, autoincrement=True)
     user_id = Column(String(30), ForeignKey('users.user_id'))
     category_id = Column(SmallInteger, ForeignKey('category.category_id'))
     amount = Column(Float(10, 2))

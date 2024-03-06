@@ -23,15 +23,15 @@ def create_new_category(category: CategoryCreate, db: Session):
         raise HTTPException(
             status_code=404, detail="Error creando la categoría.")
     try:
-      new_category = Category(
-          category_name=category.category_name,
-          category_description=category.category_description,
-          category_status=category.category_status,
-      )
-      db.add(new_category)
-      db.commit()
-      db.refresh(new_category)
-      return new_category
+        new_category = Category(
+            category_name=category.category_name,
+            category_description=category.category_description,
+            category_status=category.category_status,
+        )
+        db.add(new_category)
+        db.commit()
+        db.refresh(new_category)
+        return new_category
     except Exception as e:
         Logger.error(f"Error creating category: {e}")
         raise HTTPException(
@@ -55,6 +55,7 @@ def get_all_categories(db: Session, offset: int = 0, limit: int = 10):
         return handle_server_down()
     categories = db.query(Category).offset(offset).limit(limit).all()
     return categories
+
 
 def update_category(category_id: str, category: CategoryCreate, db: Session):
     if not server_status(db):
