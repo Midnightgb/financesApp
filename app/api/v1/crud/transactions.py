@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
+from sqlalchemy.sql import func
 
 from api.v1.models.transaction import Transaction
 from api.v1.schemas.transaction import TransactionCreate, TransactionUpdate
@@ -80,6 +81,14 @@ def get_all_transactions(
         if conditions:
             query = query.filter(and_(*conditions))
         transactions = query.offset(offset).limit(limit).all()
+        count = db.query(Transaction).count()
+        revenue = query.filter(Transaction.t_type == "revenue").with_entities(func.sum(Transaction.amount)).scalar()
+        revenue = round(revenue, 2)
+        expenses = query.filter(Transaction.t_type == "expenses").with_entities(func.sum(Transaction.amount)).scalar()
+        expenses = round(expenses, 2)
+        print("revenue: ", revenue)
+        print("expenses: ", expenses)
+        print("Count: ", count)
         if not transactions:
             raise HTTPException(
                 status_code=404, detail="No se encontraron transacciones")

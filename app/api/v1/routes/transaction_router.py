@@ -43,6 +43,10 @@ async def get_transactions(
         t_date_to: str = None):
     if not server_status(db):
         return handle_server_down()
+    if offset < 0:
+        offset = 0
+    if limit < 0:
+        limit = 0
     return get_all_transactions(db, user_id, offset, limit, category_id, t_type, t_date_from, t_date_to)
 
 
