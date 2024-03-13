@@ -38,10 +38,12 @@ async def get_transactions(
         limit: int = 10,
         user_id: str = None,
         category_id: int = None,
-        t_type: str = None):
+        t_type: str = None,
+        t_date_from: str = None,
+        t_date_to: str = None):
     if not server_status(db):
         return handle_server_down()
-    return get_all_transactions(db, user_id, offset, limit, category_id, t_type)
+    return get_all_transactions(db, user_id, offset, limit, category_id, t_type, t_date_from, t_date_to)
 
 
 @router.put("/{transaction_id}", response_model=TransactionRead)

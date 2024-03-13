@@ -1,4 +1,4 @@
-from pymongo.mongo_client import MongoClient
+""" from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from pymongo.errors import OperationFailure
 from .logger import Logger
@@ -34,3 +34,4 @@ def server_status_mongodb():
     except OperationFailure:
         Logger.error("Database server status: ERROR")
         return False
+ """

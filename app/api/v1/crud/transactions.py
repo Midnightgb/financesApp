@@ -45,20 +45,23 @@ def get_transaction_by_id(
             Transaction.transactions_id == transaction_id).first()
         if transaction:
             return transaction
-        return None
+        raise HTTPException(
+            status_code=404, detail="Transacción no encontrada")
     except Exception as e:
         Logger.error(f"Error getting transaction by id: {str(e)}")
         raise HTTPException(
-            status_code=500, detail=f"Error al obtener la transacción por id: {str(e)}")
+            status_code=500, detail=f"Error al obtener la transacción: {str(e)}")
 
 
 def get_all_transactions(
         db: Session,
         user_id: str = None,
         offset: int = 0,
-        limit: int = 10,
+        limit: int = 20,
         category_id: int = None,
-        t_type: str = None):
+        t_type: str = None,
+        t_date_from: str = None,
+        t_date_to: str = None):
     try:
         if not server_status(db):
             return handle_server_down()
@@ -70,9 +73,16 @@ def get_all_transactions(
             conditions.append(Transaction.t_type == t_type)
         if user_id:
             conditions.append(Transaction.user_id == user_id)
+        if t_date_from:
+            conditions.append(Transaction.t_date >= t_date_from)
+        if t_date_to:
+            conditions.append(Transaction.t_date <= t_date_to)
         if conditions:
             query = query.filter(and_(*conditions))
         transactions = query.offset(offset).limit(limit).all()
+        if not transactions:
+            raise HTTPException(
+                status_code=404, detail="No se encontraron transacciones")
         return transactions
     except Exception as e:
         Logger.error(f"Error getting all transactions: {str(e)}")
@@ -99,7 +109,7 @@ def update_transaction(
             db.commit()
             db.refresh(db_transaction)
             return db_transaction
-        return None
+        return {"status": "false", "message": "Transacción no encontrada"}
     except Exception as e:
         db.rollback()
         Logger.error(f"Error updating transaction: {str(e)}")
@@ -119,7 +129,7 @@ def delete_transaction(
             db.delete(db_transaction)
             db.commit()
             return db_transaction
-        return None
+        return {"status": "false", "message": "Transacción no encontrada"}
     except Exception as e:
         db.rollback()
         Logger.error(f"Error deleting transaction: {str(e)}")
